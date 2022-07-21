@@ -13,6 +13,7 @@ class viewpage extends StatefulWidget {
 class _viewpageState extends State<viewpage> {
 
   List<Map<String, Object?>> l = List.empty(growable: true);
+  List<Map<String, Object?>> s = List.empty(growable: true);
   Database? db;
   bool status = false;
 
@@ -31,18 +32,26 @@ class _viewpageState extends State<viewpage> {
 
     List<Map<String, Object?>> x = await db!.rawQuery(qry);
     l.addAll(x);
+    l.sort((a, b) => a['name'].toString().compareTo(b['name'].toString()),);
+    s.addAll(l);
 
 
     setState(() {
       status = true;
     });
 
+    // bool search = false;
+
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("ContectBook")),
+      appBar: AppBar(title: Text("ContectBook"),actions: [
+        IconButton(onPressed: () {
+
+        }, icon: Icon(Icons.search))
+      ]),
       body: status?(l.length>0 ? ListView.builder(
         itemCount: l.length ,
         itemBuilder: (context, index) {
