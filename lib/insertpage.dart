@@ -83,21 +83,31 @@ class _insertpageState extends State<insertpage> {
           String name = tname.text;
           String contact = tcontect.text;
 
+
+
           if(widget.method == "insert")
             {
-              String qry = "INSERT INTO Anurag(name,contact) VALUES('$name','$contact')";
-              int id = await db!.rawInsert(qry);
 
-              if(id > 0){
+              if(name.isEmpty && contact.isEmpty){
                 Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
                   return viewpage();
                 },));
               }else{
-                print("Not inserted Try Again");
+                String qry = "INSERT INTO Anurag(name,contact) VALUES('$name','$contact')";
+                int id = await db!.rawInsert(qry);
+                if(id > 0){
+
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                    return viewpage();
+                  },));
+                }else{
+                  print("Not inserted Try Again");
+                }
+
+
+                print(id);
               }
 
-
-              print(id);
             }else{
             String q = " update Anurag set name='$name',contact='$contact' where id=${widget.map!['id']}";
             int id = await db!.rawUpdate(q);
