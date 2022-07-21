@@ -87,6 +87,14 @@ class _viewpageState extends State<viewpage> {
             leading:Text("${m['id']}"),
             title:Text("${m['name']}"),
             subtitle: Text("${m['contact']}"),
+            trailing: IconButton(onPressed: () {
+
+              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                return insertpage("update",map: m);
+              },));
+
+
+            }, icon: Icon(Icons.edit)),
 
 
           );
@@ -96,7 +104,7 @@ class _viewpageState extends State<viewpage> {
       floatingActionButton:FloatingActionButton(onPressed: () {
 
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-          return insertpage();
+          return insertpage("insert");
 
         },));
 

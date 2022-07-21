@@ -4,7 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 
 class insertpage extends StatefulWidget {
-  const insertpage({Key? key}) : super(key: key);
+
+  Map? map;
+  String? method;
+  insertpage(this.method, {this.map});
+
+
 
   @override
   State<insertpage> createState() => _insertpageState();
@@ -14,6 +19,7 @@ class _insertpageState extends State<insertpage> {
 
   TextEditingController tname= TextEditingController();
   TextEditingController tcontect= TextEditingController();
+
 
   Database? db;
 
@@ -25,6 +31,13 @@ class _insertpageState extends State<insertpage> {
   @override
   void initState() {
     super.initState();
+
+    if(widget.method == "update")
+      {
+        tname.text = widget.map!['name'];
+        tcontect.text = widget.map!['contact'];
+      }
+
     Dbhelper().creatdata().then((value) {
 
       db = value;
@@ -66,20 +79,38 @@ class _insertpageState extends State<insertpage> {
         ElevatedButton(onPressed: () async{
 
 
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            return viewpage();
-          },));
+
           String name = tname.text;
           String contact = tcontect.text;
 
-          String qry = "INSERT INTO Anurag(name,contact) VALUES('$name','$contact')";
-          int id = await db!.rawInsert(qry);
+          if(widget.method == "insert")
+            {
+              String qry = "INSERT INTO Anurag(name,contact) VALUES('$name','$contact')";
+              int id = await db!.rawInsert(qry);
 
-          handalsubmitted();
+              if(id > 0){
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+                  return viewpage();
+                },));
+              }else{
+                print("Not inserted Try Again");
+              }
 
-          print(id);
 
-        }, child: Text("Save"))
+              print(id);
+            }else{
+            String q = " update Anurag set name='$name',contact='$contact' where id=${widget.map!['id']}";
+            int id = await db!.rawUpdate(q);
+            if(id==1)
+              {
+                Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
+
+                  return viewpage();
+
+                },));
+              }
+          }
+        }, child: Text("${widget.method}"))
 
       ],),
 
